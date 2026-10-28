@@ -1,11 +1,18 @@
+-- =====================================================
+-- PROJECT: Customer Sales Analysis
+-- OBJECTIVE: Analyze revenue, customer spending,
+--            city-wise performance, and monthly sales.
+-- DATABASE: MySQL
+-- SKILLS: SQL, JOINs, Aggregations, GROUP BY,
+--         ORDER BY, Date Functions
+-- DATASET: Fictional sample sales data
+-- =====================================================
 
--- Customer Sales Analysis
--- Objective: Analyze revenue, customer spending, and monthly sales.
--- Skills: SQL, JOINs, Aggregations, GROUP BY, ORDER BY
-
+-- 1. DATABASE SETUP
 CREATE DATABASE IF NOT EXISTS sales_analysis;
 USE sales_analysis;
 
+-- 2. CREATE TABLES
 CREATE TABLE customers (
     customer_id INT PRIMARY KEY,
     customer_name VARCHAR(100),
@@ -21,6 +28,7 @@ CREATE TABLE orders (
         REFERENCES customers(customer_id)
 );
 
+-- 3. INSERT SAMPLE DATA
 INSERT INTO customers VALUES
 (1, 'Aarav', 'Delhi'),
 (2, 'Priya', 'Mumbai'),
@@ -38,33 +46,64 @@ INSERT INTO orders VALUES
 (107, 5, '2026-03-10', 3500.00),
 (108, 3, '2026-03-18', 2100.00);
 
--- 1. Calculate total revenue
+-- =====================================================
+-- ANALYSIS 1: TOTAL REVENUE
+-- Business question: What is the total sales revenue?
+-- Expected result: 21,500.00
+-- =====================================================
+
 SELECT SUM(amount) AS total_revenue
 FROM orders;
 
--- 2. Find customer spending
-SELECT c.customer_name,
-       SUM(o.amount) AS total_spent
+-- =====================================================
+-- ANALYSIS 2: CUSTOMER SPENDING
+-- Business question: Who are the highest-spending customers?
+-- Expected top customer: Aarav (5,700.00)
+-- =====================================================
+
+SELECT
+    c.customer_name,
+    SUM(o.amount) AS total_spent
 FROM customers c
-JOIN orders o ON c.customer_id = o.customer_id
+JOIN orders o
+    ON c.customer_id = o.customer_id
 GROUP BY c.customer_id, c.customer_name
 ORDER BY total_spent DESC;
 
--- 3. Analyze revenue by city
-SELECT c.city,
-       SUM(o.amount) AS total_revenue
+-- =====================================================
+-- ANALYSIS 3: CITY-WISE REVENUE
+-- Business question: Which city generates the most revenue?
+-- Expected top city: Delhi (9,000.00)
+-- =====================================================
+
+SELECT
+    c.city,
+    SUM(o.amount) AS total_revenue
 FROM customers c
-JOIN orders o ON c.customer_id = o.customer_id
+JOIN orders o
+    ON c.customer_id = o.customer_id
 GROUP BY c.city
 ORDER BY total_revenue DESC;
 
--- 4. Calculate average order value
-SELECT ROUND(AVG(amount), 2) AS average_order_value
+-- =====================================================
+-- ANALYSIS 4: AVERAGE ORDER VALUE
+-- Business question: What is the average revenue per order?
+-- Expected result: 2,687.50
+-- =====================================================
+
+SELECT
+    ROUND(AVG(amount), 2) AS average_order_value
 FROM orders;
 
--- 5. Find the highest-revenue month
-SELECT DATE_FORMAT(order_date, '%Y-%m') AS sales_month,
-       SUM(amount) AS monthly_revenue
+-- =====================================================
+-- ANALYSIS 5: MONTHLY REVENUE
+-- Business question: Which month has the highest revenue?
+-- Expected result: February 2026 (8,900.00)
+-- =====================================================
+
+SELECT
+    DATE_FORMAT(order_date, '%Y-%m') AS sales_month,
+    SUM(amount) AS monthly_revenue
 FROM orders
 GROUP BY DATE_FORMAT(order_date, '%Y-%m')
 ORDER BY monthly_revenue DESC
