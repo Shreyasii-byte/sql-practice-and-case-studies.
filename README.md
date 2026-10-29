@@ -1,8 +1,8 @@
-# SQL Practice & Case Studies 📊
+# SQL Practice & Case Studies 
 
 A collection of SQL queries and practical exercises focused on data analysis, database management, and data-driven problem-solving.
 
-## 📂 Repository Structure
+##  Repository Structure
 
 ```text
 sql-practice-and-case-studies/
@@ -16,7 +16,7 @@ sql-practice-and-case-studies/
 └── 07-data-analysis-case-studies/
 ```
 
-## 🎯 Focus Areas
+##  Focus Areas
 - SQL querying, joins, aggregations, and window functions
 - Data extraction, transformation, and analysis
 - Analytical problem-solving and business insights
